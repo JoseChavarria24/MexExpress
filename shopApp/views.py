@@ -1,7 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from shopApp.models import Product, Contact
-#Create your views here
+from shopApp.forms import FormComment, FormContact
 
 def index(request):
     #return HttpResponse("Hola mundo desde Django!")
@@ -9,7 +9,6 @@ def index(request):
     special_offers = Product.objects.filter(product_is_offer = True)
 
     my_context = {
-        'user': "Jose",
         'message' : "Haces un buen trabajo :)",
         'product_list': product_list,
         'special_offers': special_offers,
@@ -32,9 +31,39 @@ def index(request):
     return render(request, "shopApp/index.html", context = my_context)
 
 def about(request):
-    active_contacts = Contact.objects.filter(contact_active = True)
+    active_contacts = Contact.objects.filter(contact_active = True).order_by('contact_full_name')
     my_context = {
-        "user": "Jose",
         "contacts": active_contacts,
     }
     return render(request, "shopApp/about.html", context = my_context)
+
+def form_comment(request):
+    form = FormComment()
+
+    if request.method =="POST":
+        form = FormComment(request.POST)
+        if form.is_valid():
+            print('formulario valido')
+            print('Nombre: ', form.cleaned_data['full_name'])
+            print('Email: ', form.cleaned_data['email'])
+            print('Comment', form.cleaned_data['comment'])
+    return render(request, 'shopApp/form_comment.html', context = { 'form': form })
+
+def form_contact(request):
+    form = FormContact()
+
+    if request.method == "POST":
+        form = FormContact(request.POST)
+        if form.is_valid():
+            contact = Contact.objects.get_or_create(
+            contact_full_name =form.cleaned_data['full_name'],
+            contact_address = form.cleaned_data['address'],
+            contact_phone = form.cleaned_data['phone'],
+            contact_email = form.cleaned_data['email'],
+            contact_active = form.cleaned_data['contact_active']
+            )
+            return redirect(to = 'about')
+    else:
+        form = FormContact()
+
+    return render(request, 'shopApp/form_contact.html', context = { 'form': form })

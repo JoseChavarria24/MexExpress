@@ -26,7 +26,7 @@ class Contact(models.Model):
     #Campos de la tabla contact
     contact_full_name = models.CharField(max_length = 60, unique=True)
     contact_address = models.CharField(max_length=100)
-    contact_phone = models.BigIntegerField()
+    contact_phone = models.CharField(max_length=20)
     contact_email = models.EmailField(unique = True, max_length=255)
     contact_active = models.BooleanField()
 

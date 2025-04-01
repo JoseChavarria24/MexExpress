@@ -1,0 +1,12 @@
+{% extends 'shopApp/base.html'%}
+{% load static %}
+{% block content %}
+<h2>Contacto</h2>
+<div class="d-flex container-fluid">
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary" href="{% url 'about' %}">Registrar</button>
+    </form>
+</div>
+{% endblock %}

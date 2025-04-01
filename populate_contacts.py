@@ -15,7 +15,7 @@ def populate_contacts( n_contacts = 5 ):
     for i in range (n_contacts):
         fake_name = fake_generator.name()
         fake_address = fake_generator.address()
-        fake_phone = random.randint(1000000000, 9999999999)
+        fake_phone = fake_generator.phone_number()
         fake_email = fake_generator.email()
         fake_is_active = random.random() > 0.5
 
